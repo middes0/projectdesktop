@@ -255,6 +255,22 @@ body{background:#071a31;color:#202b3b;font-family:"Segoe UI",SegoeUI,system-ui,-
 .desk-icon:active{background:#b9dcfa55}
 #taskbar{padding-bottom:env(safe-area-inset-bottom,0px)}
 .window-content{overscroll-behavior:contain}
+
+/* Jogos em modo dedicado: não ficam espremidos abaixo do catálogo */
+#game-stage.game-active{position:fixed;inset:42px 0 88px;z-index:9000;display:block;overflow:auto;margin:0!important;padding:clamp(14px,3vw,30px);background:radial-gradient(ellipse at 50% 0%,#21163b 0%,#0b0a13 55%,#08070d 100%);color:#f5f0ff;border-top:1px solid #c6a8ff35;animation:game-enter .18s ease-out}
+#game-stage.game-active>.game-toolbar{max-width:760px;margin:0 auto 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#game-stage.game-active .game-board{margin:18px auto;touch-action:manipulation}
+#game-stage.game-active .game-controls{max-width:320px;margin:14px auto;display:flex;justify-content:center;gap:10px}
+#game-stage.game-active .game-controls button{min-width:48px;min-height:44px;border:1px solid #b18aff55;border-radius:12px;background:#b18aff1c;font-size:20px}
+#game-stage.game-active .hero{max-width:680px;margin-left:auto!important;margin-right:auto!important}
+#game-stage.game-active>.row{justify-content:center}
+#game-stage.game-active .game-status{font-size:16px;font-weight:650}
+@keyframes game-enter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){
+ #game-stage.game-active{inset:0 0 64px;padding:14px 12px 22px}
+ #game-stage.game-active>.game-toolbar{gap:8px;margin-bottom:14px}
+ #game-stage.game-active .game-board{max-width:min(92vw,360px)}
+}
 </style>
 </head>
 <body>
@@ -336,9 +352,9 @@ function setupFiles(w){
 }
 function setupApp(id,w){if(id==='start')renderStartMenu(w);if(id==='games')setupGames(w);function setupGames(w){
  const stage=w.querySelector('#game-stage');let stopGame=()=>{},onlinePeer=null,onlineConn=null;
- const home=()=>{stopGame();if(onlineConn){try{onlineConn.close()}catch(e){}onlineConn=null}if(onlinePeer){try{onlinePeer.destroy()}catch(e){}onlinePeer=null}stage.innerHTML=''};
+ const home=()=>{stage.classList.remove('game-active');stopGame();if(onlineConn){try{onlineConn.close()}catch(e){}onlineConn=null}if(onlinePeer){try{onlinePeer.destroy()}catch(e){}onlinePeer=null}stage.innerHTML=''};
  w.querySelectorAll('[data-game]').forEach(launch=>launch.addEventListener('click',()=>{try{start(launch.dataset.game)}catch(err){console.error('Erro ao abrir jogo:',err);stage.innerHTML='<div class="card"><b>Não foi possível abrir este jogo.</b><p class="note">'+escapeHtml(err&&err.message?err.message:'Erro inesperado')+'</p><button class="action" id="game-back">Voltar aos jogos</button></div>';stage.querySelector('#game-back').onclick=home}}));
- function start(kind){stopGame();if(kind!=='online'&&onlinePeer){try{onlinePeer.destroy()}catch(e){}onlinePeer=null;onlineConn=null}if(kind==='snake')snake();if(kind==='memory')memory();if(kind==='ttt')ttt();if(kind==='2048')game2048();if(kind==='reflex')reflex();if(kind==='quiz')quiz();if(kind==='online')onlineMenu()}
+ function start(kind){stage.classList.add('game-active');stopGame();if(kind!=='online'&&onlinePeer){try{onlinePeer.destroy()}catch(e){}onlinePeer=null;onlineConn=null}if(kind==='snake')snake();if(kind==='memory')memory();if(kind==='ttt')ttt();if(kind==='2048')game2048();if(kind==='reflex')reflex();if(kind==='quiz')quiz();if(kind==='online')onlineMenu()}
  const header=(name,extra='')=>'<div class="game-toolbar"><button class="action" id="game-back">← Jogos</button><div class="game-status">'+name+'</div><div class="note">'+extra+'</div></div>';
  function snake(){
   let body=[{x:5,y:5},{x:4,y:5},{x:3,y:5}],dir={x:1,y:0},next={x:1,y:0},food={x:8,y:5},score=0,over=false,timer,keyHandler;const size=12;
