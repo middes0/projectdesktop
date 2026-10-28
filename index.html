@@ -172,10 +172,24 @@ body{background:#071a31;color:#202b3b;font-family:"Segoe UI",SegoeUI,system-ui,-
 @media(max-width:520px){.start-pins{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}.start-pin{padding:8px 5px;gap:7px;font-size:11px}.start-footer{margin:14px -14px -14px;padding:10px 14px}.start-build{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.window{animation:none!important}}
 
+
+/* Portrait phones: offer landscape orientation for a desktop-like workspace */
+#landscape-prompt{display:none}
+@media(max-width:700px) and (orientation:portrait){
+ #landscape-prompt{display:flex;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:24px;background:rgba(5,17,34,.94);backdrop-filter:blur(20px);color:#f7fbff}
+ .landscape-card{width:min(100%,360px);text-align:center;padding:28px 22px;border:1px solid #ffffff30;border-radius:16px;background:linear-gradient(145deg,#173a60f5,#0b1e38f5);box-shadow:0 20px 70px #0008}
+ .landscape-symbol{font-size:44px;color:#80c9ff;line-height:1.2}
+ .landscape-card h2{margin:12px 0 8px;font-size:23px}
+ .landscape-card p{color:#c3d5e9;font-size:14px}
+ .landscape-card .action{margin-top:10px;background:#dceeff;color:#153553;border-color:#ffffff;border-radius:7px;padding:12px 16px;font-weight:600}
+ .landscape-card small{display:block;margin-top:14px;color:#a9bfd7;font-size:11px}
+}
+
 </style>
 </head>
 <body>
 <div id="wallpaper"></div>
+<div id="landscape-prompt" role="dialog" aria-label="Modo horizontal"><div class="landscape-card"><div class="landscape-symbol">↻</div><h2>Use na horizontal</h2><p>O PROJECT DESKTOP foi feito para uma tela de computador. Gire o celular para ter mais espaço.</p><button id="landscape-button" class="action">Ativar modo horizontal</button><small id="landscape-hint">Se a rotação automática não funcionar, gire o aparelho manualmente.</small></div></div>
 <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden" xmlns="http://www.w3.org/2000/svg">
 <symbol id="i-start" viewBox="0 0 24 24"><path fill="currentColor" d="M2 3.4 10.6 2v8.6H2V3.4Zm10.2-1.6L22 0v10.6H12.2V1.8ZM2 12.1h8.6v8.6L2 19.3v-7.2Zm10.2 0H22V24l-9.8-1.4V12.1Z"/></symbol>
 <symbol id="i-files" viewBox="0 0 48 48"><path fill="#f6c453" d="M5 11a4 4 0 0 1 4-4h11l5 5h14a4 4 0 0 1 4 4v21a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V11Z"/><path fill="#ffe08a" d="M5 18h38v19a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V18Z"/><path fill="#fff0b8" d="M8 20h32v15a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V20Z"/></symbol>
@@ -235,6 +249,19 @@ input.addEventListener('input',function(){const q=input.value.toLocaleLowerCase(
 function setupApp(id,w){if(id==='start')renderStartMenu(w);if(id==='calculator'){let display=w.querySelector('#calc-display'),current='0',stored=null,op=null,reset=false;const render=()=>display.textContent=current;w.querySelectorAll('[data-key]').forEach(b=>b.onclick=()=>{const k=b.dataset.key;if(k==='clear'){current='0';stored=null;op=null;reset=false}else if(k==='sign'){current=String(Number(current)*-1)}else if(k==='percent'){current=String(Number(current)/100)}else if(['+','-','*','/'].includes(k)){stored=Number(current);op=k;reset=true}else if(k==='='){if(op&&stored!==null){const n=Number(current);let result=op==='+'?stored+n:op==='-'?stored-n:op==='*'?stored*n:stored/n;current=Number.isFinite(result)?String(Number(result.toPrecision(10))):'Erro';stored=null;op=null;reset=true}}else if(k==='.'){if(reset){current='0';reset=false}if(!current.includes('.'))current+='.'}else{if(reset||current==='0'||current==='Erro'){current=k;reset=false}else if(current.length<16)current+=k}render()})}if(id==='notes'){const area=w.querySelector('#note-text');area.value=localStorage.getItem('pd-note')||'';w.querySelector('#save-note').onclick=()=>{localStorage.setItem('pd-note',area.value);toast('Nota salva neste navegador')}}if(id==='terminal'){const form=w.querySelector('#termform'),input=w.querySelector('#terminput'),out=w.querySelector('#termout');form.onsubmit=e=>{e.preventDefault();const cmd=input.value.trim().toLowerCase();out.innerHTML+=`<span style="color:#d9c4ff">› ${escapeHtml(input.value)}</span><br>`;let result='Comando não encontrado. Digite help.';if(cmd==='help')result='help · date · clear · about · apps';else if(cmd==='date')result=new Date().toLocaleString('pt-BR');else if(cmd==='clear'){out.innerHTML='';input.value='';return}else if(cmd==='about')result='PROJECT DESKTOP — ambiente web experimental.';else if(cmd==='apps')result='Arquivos · Bloco de notas · Terminal · Configurações · Sobre';else if(!cmd)result='';out.innerHTML+=result+'<br><br>';input.value='';out.scrollTop=out.scrollHeight}}if(id==='settings'){const accent=w.querySelector('#accent'),clock=w.querySelector('#clock24'),motion=w.querySelector('#reduce-motion');accent.value=localStorage.getItem('pd-accent')||'#a879ff';clock.checked=localStorage.getItem('pd-clock24')!=='false';motion.checked=localStorage.getItem('pd-motion')==='true';document.documentElement.style.setProperty('--purple',accent.value);document.documentElement.style.setProperty('--motion',motion.checked?'0':'1');accent.oninput=e=>{document.documentElement.style.setProperty('--purple',e.target.value);localStorage.setItem('pd-accent',e.target.value)};clock.onchange=e=>{localStorage.setItem('pd-clock24',String(e.target.checked));updateClock(e.target.checked)};motion.onchange=e=>{localStorage.setItem('pd-motion',String(e.target.checked));document.documentElement.style.setProperty('--motion',e.target.checked?'0':'1')}}}
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-app],[data-launch]');if(!b)return;openApp(b.dataset.app||b.dataset.launch)});function updateClock(use24=true){const now=new Date();const opts={hour:'2-digit',minute:'2-digit',hour12:!use24};$('#topclock').textContent=now.toLocaleTimeString('pt-BR',opts);$('#taskclock').textContent=now.toLocaleTimeString('pt-BR',opts)}updateClock();setInterval(()=>updateClock(document.querySelector('#clock24')?.checked??true),15000);
+
+const landscapeButton=document.querySelector('#landscape-button');
+if(landscapeButton)landscapeButton.addEventListener('click',async()=>{
+ const hint=document.querySelector('#landscape-hint');
+ try{
+  if(!document.fullscreenElement&&document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();
+  if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock('landscape');
+  if(hint)hint.textContent='Modo horizontal ativado. Se a tela não girar, confira a rotação automática do celular.';
+ }catch(e){
+  if(hint)hint.textContent='Não foi possível girar automaticamente neste navegador. Ative a rotação automática e vire o celular de lado.';
+ }
+});
+
 </script>
 </body>
 </html>
