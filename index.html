@@ -306,7 +306,7 @@ function setupFiles(w){
 function setupApp(id,w){if(id==='start')renderStartMenu(w);if(id==='games')setupGames(w);function setupGames(w){
  const stage=w.querySelector('#game-stage');let stopGame=()=>{},onlinePeer=null,onlineConn=null;
  const home=()=>{stopGame();if(onlineConn){try{onlineConn.close()}catch(e){}onlineConn=null}if(onlinePeer){try{onlinePeer.destroy()}catch(e){}onlinePeer=null}stage.innerHTML=''};
- stage.addEventListener('click',e=>{const launch=e.target.closest('[data-game]');if(launch){start(launch.dataset.game);return}if(e.target.closest('#game-back'))home()});
+ w.querySelectorAll('[data-game]').forEach(launch=>launch.addEventListener('click',()=>{try{start(launch.dataset.game)}catch(err){console.error('Erro ao abrir jogo:',err);stage.innerHTML='<div class="card"><b>Não foi possível abrir este jogo.</b><p class="note">'+escapeHtml(err&&err.message?err.message:'Erro inesperado')+'</p><button class="action" id="game-back">Voltar aos jogos</button></div>';stage.querySelector('#game-back').onclick=home}}));
  function start(kind){stopGame();if(kind!=='online'&&onlinePeer){try{onlinePeer.destroy()}catch(e){}onlinePeer=null;onlineConn=null}if(kind==='snake')snake();if(kind==='memory')memory();if(kind==='ttt')ttt();if(kind==='online')onlineMenu()}
  const header=(name,extra='')=>'<div class="game-toolbar"><button class="action" id="game-back">← Jogos</button><div class="game-status">'+name+'</div><div class="note">'+extra+'</div></div>';
  function snake(){
