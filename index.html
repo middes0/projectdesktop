@@ -572,6 +572,37 @@ if(landscapeButton)landscapeButton.addEventListener('click',async()=>{
 })();
 
 
+/* Etapa 14 — reaplica preferências salvas ao iniciar */
+(function restoreDesktopPreferences(){
+ const read=(key,fallback)=>{try{const value=localStorage.getItem(key);return value===null?fallback:value}catch(_){return fallback}};
+ const wall=document.querySelector('#wallpaper');
+ const wallpapers={
+  blue:'radial-gradient(ellipse at 65% 42%,#3a9ce8 0%,#1b5d9c 19%,transparent 43%),radial-gradient(ellipse at 61% 45%,#6bd3f0 0%,transparent 23%),linear-gradient(130deg,#06152d 0%,#0c3261 48%,#07162f 100%)',
+  purple:'radial-gradient(ellipse at 75% 20%,#59358b 0%,transparent 35%),radial-gradient(ellipse at 18% 82%,#142c50 0%,transparent 38%),linear-gradient(135deg,#080710,#17102a 55%,#080711)',
+  aurora:'radial-gradient(ellipse at 20% 80%,#20a68a 0%,transparent 42%),radial-gradient(ellipse at 80% 15%,#477bd4 0%,transparent 43%),linear-gradient(135deg,#071a31,#0b2537 55%,#07121f)',
+  dark:'linear-gradient(135deg,#10131a,#030407)'
+ };
+ const wallName=read('pd-wallpaper','blue');
+ if(wall)wall.style.background=wallpapers[wallName]||wallpapers.blue;
+ const accent=read('pd-accent','#2878d7');
+ if(/^#[0-9a-fA-F]{6}$/.test(accent)){
+  document.documentElement.style.setProperty('--purple',accent);
+  const style=document.createElement('style');style.id='pd-accent-style';
+  style.textContent='.taskbtn.active:after{background:'+accent+'}.eyebrow{color:'+accent+'!important}.action{border-color:'+accent+'55}.action:hover{border-color:'+accent+'}.field:focus{border-color:'+accent+'}.start-search{border-bottom-color:'+accent+'}';
+  document.head.append(style);
+ }
+ if(read('pd-motion','false')==='true'){
+  const style=document.createElement('style');style.id='pd-motion-style';
+  style.textContent='*,*:before,*:after{animation:none!important;transition:none!important}';
+  document.head.append(style);
+ }
+ const use24=read('pd-clock24','true')!=='false';
+ const clockOpts={hour:'2-digit',minute:'2-digit',hour12:!use24};
+ const now=new Date().toLocaleTimeString('pt-BR',clockOpts);
+ const taskClock=document.querySelector('#taskclock'),topClock=document.querySelector('#topclock');
+ if(taskClock)taskClock.textContent=now;if(topClock)topClock.textContent=now;
+})();
+
 /* Etapa 10 — atalhos de janela e interação mais resiliente */
 document.addEventListener('keydown',e=>{
  if(!(e.altKey&&e.key==='F4'))return;
