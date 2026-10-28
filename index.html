@@ -511,17 +511,17 @@ if(landscapeButton)landscapeButton.addEventListener('click',async()=>{
 /* Central de comandos: Ctrl+K ou ⌘K */
 (function setupCommandPalette(){
  const entries=[
-  {label:'Arquivos',desc:'Abrir gerenciador de arquivos',icon:'📁',run:()=>openApp('files')},
-  {label:'Bloco de notas',desc:'Abrir suas notas salvas',icon:'📝',run:()=>openApp('notes')},
-  {label:'Terminal',desc:'Abrir terminal de comandos',icon:'>_',run:()=>openApp('terminal')},
-  {label:'Calculadora',desc:'Fazer cálculos',icon:'🧮',run:()=>openApp('calculator')},
-  {label:'Configurações',desc:'Tema, papel de parede e preferências',icon:'⚙',run:()=>openApp('settings')},
-  {label:'Jogos',desc:'Abrir a coleção de jogos',icon:'🎮',run:()=>openApp('games')},
+  {label:'Arquivos',desc:'Abrir gerenciador de arquivos',keywords:'file pasta documentos explorador',icon:'📁',run:()=>openApp('files')},
+  {label:'Bloco de notas',desc:'Abrir suas notas salvas',keywords:'notas texto escrever editor',icon:'📝',run:()=>openApp('notes')},
+  {label:'Terminal',desc:'Abrir terminal de comandos',keywords:'console cmd shell prompt',icon:'>_',run:()=>openApp('terminal')},
+  {label:'Calculadora',desc:'Fazer cálculos',keywords:'conta matemática somar dividir multiplicar',icon:'🧮',run:()=>openApp('calculator')},
+  {label:'Configurações',desc:'Tema, papel de parede e preferências',keywords:'ajustes aparência personalizar tema wallpaper',icon:'⚙',run:()=>openApp('settings')},
+  {label:'Jogos',desc:'Abrir a coleção de jogos',keywords:'game jogar diversão',icon:'🎮',run:()=>openApp('games')},
   {label:'Code Studio',desc:'Editar e executar HTML localmente',icon:'</>',run:()=>{if(readInstalledApps().includes('code')||document.querySelector('[data-window="code"]'))openApp('code');else toast('Instale o Code Studio na Loja de aplicativos')}},
-  {label:'Loja de aplicativos',desc:'Instalar ferramentas adicionais',icon:'▦',run:()=>openApp('appstore')},
-  {label:'Calendário',desc:'Ver calendário e lembretes',icon:'📅',run:()=>readInstalledApps().includes('calendar')?openApp('calendar'):toast('Instale o Calendário na Loja de aplicativos')},
+  {label:'Loja de aplicativos',desc:'Instalar ferramentas adicionais',keywords:'store app instalar baixar aplicativos',icon:'▦',run:()=>openApp('appstore')},
+  {label:'Calendário',desc:'Ver calendário e lembretes',keywords:'agenda datas compromisso lembrete',icon:'📅',run:()=>readInstalledApps().includes('calendar')?openApp('calendar'):toast('Instale o Calendário na Loja de aplicativos')},
   {label:'Paint',desc:'Desenhar e exportar imagens',icon:'🎨',run:()=>readInstalledApps().includes('paint')?openApp('paint'):toast('Instale o Paint na Loja de aplicativos')},
-  {label:'Foco Pomodoro',desc:'Temporizador de concentração',icon:'⏱',run:()=>readInstalledApps().includes('pomodoro')?openApp('pomodoro'):toast('Instale o Foco Pomodoro na Loja de aplicativos')},
+  {label:'Foco Pomodoro',desc:'Temporizador de concentração',keywords:'timer cronômetro estudar tempo produtividade',icon:'⏱',run:()=>readInstalledApps().includes('pomodoro')?openApp('pomodoro'):toast('Instale o Foco Pomodoro na Loja de aplicativos')},
   {label:'Widgets',desc:'Abrir painel de widgets',icon:'▦',run:()=>toggleWidgets(true)},
   {label:'Central de notificações',desc:'Ver notificações recentes',icon:'🔔',run:()=>toggleNotifications(true)},
   {label:'Mostrar área de trabalho',desc:'Minimizar as janelas abertas',icon:'▱',run:()=>document.querySelector('#show-desktop').click()},
@@ -534,7 +534,7 @@ if(landscapeButton)landscapeButton.addEventListener('click',async()=>{
  let shown=[],selected=0,lastFocus=null;
  function draw(){
   const q=input.value.trim().toLocaleLowerCase('pt-BR');
-  shown=entries.filter(x=>(x.label+' '+x.desc).toLocaleLowerCase('pt-BR').includes(q));
+  shown=entries.filter(x=>(x.label+' '+x.desc+' '+(x.keywords||'')).toLocaleLowerCase('pt-BR').includes(q));
   selected=Math.max(0,Math.min(selected,shown.length-1));
   results.innerHTML=shown.length?shown.map((x,i)=>'<button type="button" role="option" aria-selected="'+(i===selected)+'" class="pd-command-result '+(i===selected?'selected':'')+'" data-command-index="'+i+'"><span class="pd-command-icon">'+escapeHtml(x.icon)+'</span><span><span class="pd-command-label">'+escapeHtml(x.label)+'</span><span class="pd-command-desc">'+escapeHtml(x.desc)+'</span></span></button>').join(''):'<div class="pd-command-empty">Nenhum comando encontrado.</div>';
   const active=results.querySelector('.selected');if(active)active.scrollIntoView({block:'nearest'});
