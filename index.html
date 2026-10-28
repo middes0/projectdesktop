@@ -278,6 +278,22 @@ body{background:#071a31;color:#202b3b;font-family:"Segoe UI",SegoeUI,system-ui,-
 .window.maximized{z-index:8000}.titlebar{user-select:none;-webkit-user-select:none}.resize-handle{touch-action:none}
 @media(max-width:759px){.window.snap-left,.window.snap-right{left:6px!important;top:42px!important;width:calc(100vw - 12px)!important;height:calc(100dvh - 108px)!important}.window{max-width:calc(100vw - 12px);max-height:calc(100dvh - 62px)}.titlebar{cursor:default;touch-action:pan-y}.resize-handle{width:26px;height:26px}.window-content{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}#taskbar{padding-left:4px;padding-right:4px}}
 @media(max-width:390px){#taskbar .taskbtn{width:31px}#taskbar .clock{font-size:9px}.win-controls button{width:30px}.window-title{font-size:12px}}
+
+/* Etapa 8 — central de comandos */
+#pd-command-palette{position:fixed;z-index:12000;inset:0;display:flex;justify-content:center;align-items:flex-start;padding:12vh 14px 20px;background:#07101dcc;backdrop-filter:blur(7px)}
+#pd-command-palette[hidden]{display:none}
+.pd-command-box{width:min(620px,100%);max-height:76dvh;display:flex;flex-direction:column;overflow:hidden;background:#f8faff;border:1px solid #c5d8ed;border-radius:12px;box-shadow:0 28px 90px #00152d88;color:#20334b}
+.pd-command-search{display:flex;align-items:center;gap:10px;padding:14px;border-bottom:1px solid #dbe5f0}
+.pd-command-search span{font-size:22px;color:#347ab8}
+#pd-command-input{width:100%;border:0;outline:0;background:transparent;color:#20334b;font-size:16px}
+#pd-command-results{overflow:auto;padding:7px;overscroll-behavior:contain}
+.pd-command-result{display:flex;align-items:center;gap:11px;width:100%;padding:10px;border:1px solid transparent;border-radius:7px;background:transparent;color:#20334b;text-align:left}
+.pd-command-result:hover,.pd-command-result:focus-visible,.pd-command-result.selected{background:#e6f2ff;border-color:#bfdcf7;outline:none}
+.pd-command-icon{width:34px;height:34px;display:grid;place-items:center;background:#e5effa;border-radius:7px;font-size:19px;flex-shrink:0}
+.pd-command-label{font-weight:600}.pd-command-desc{display:block;color:#65768c;font-size:11px;margin-top:2px}
+.pd-command-empty{padding:20px;text-align:center;color:#65768c;font-size:13px}
+.pd-command-foot{display:flex;justify-content:space-between;gap:8px;padding:9px 13px;background:#f0f5fb;border-top:1px solid #dbe5f0;color:#65768c;font-size:10px}
+@media(max-width:520px){#pd-command-palette{padding:7vh 8px 12px}.pd-command-box{max-height:84dvh}.pd-command-search{padding:12px}.pd-command-result{padding:9px}}
 </style>
 </head>
 <body>
@@ -490,6 +506,52 @@ if(landscapeButton)landscapeButton.addEventListener('click',async()=>{
   if(hint)hint.textContent='Não foi possível girar automaticamente neste navegador. Ative a rotação automática e vire o celular de lado.';
  }
 });
+
+
+/* Central de comandos: Ctrl+K ou ⌘K */
+(function setupCommandPalette(){
+ const entries=[
+  {label:'Arquivos',desc:'Abrir gerenciador de arquivos',icon:'📁',run:()=>openApp('files')},
+  {label:'Bloco de notas',desc:'Abrir suas notas salvas',icon:'📝',run:()=>openApp('notes')},
+  {label:'Terminal',desc:'Abrir terminal de comandos',icon:'>_',run:()=>openApp('terminal')},
+  {label:'Calculadora',desc:'Fazer cálculos',icon:'🧮',run:()=>openApp('calculator')},
+  {label:'Configurações',desc:'Tema, papel de parede e preferências',icon:'⚙',run:()=>openApp('settings')},
+  {label:'Jogos',desc:'Abrir a coleção de jogos',icon:'🎮',run:()=>openApp('games')},
+  {label:'Code Studio',desc:'Editar e executar HTML localmente',icon:'</>',run:()=>{if(readInstalledApps().includes('code')||document.querySelector('[data-window="code"]'))openApp('code');else toast('Instale o Code Studio na Loja de aplicativos')}},
+  {label:'Loja de aplicativos',desc:'Instalar ferramentas adicionais',icon:'▦',run:()=>openApp('appstore')},
+  {label:'Calendário',desc:'Ver calendário e lembretes',icon:'📅',run:()=>readInstalledApps().includes('calendar')?openApp('calendar'):toast('Instale o Calendário na Loja de aplicativos')},
+  {label:'Paint',desc:'Desenhar e exportar imagens',icon:'🎨',run:()=>readInstalledApps().includes('paint')?openApp('paint'):toast('Instale o Paint na Loja de aplicativos')},
+  {label:'Foco Pomodoro',desc:'Temporizador de concentração',icon:'⏱',run:()=>readInstalledApps().includes('pomodoro')?openApp('pomodoro'):toast('Instale o Foco Pomodoro na Loja de aplicativos')},
+  {label:'Widgets',desc:'Abrir painel de widgets',icon:'▦',run:()=>toggleWidgets(true)},
+  {label:'Central de notificações',desc:'Ver notificações recentes',icon:'🔔',run:()=>toggleNotifications(true)},
+  {label:'Mostrar área de trabalho',desc:'Minimizar as janelas abertas',icon:'▱',run:()=>document.querySelector('#show-desktop').click()},
+  {label:'Modo foco',desc:'Alternar a interface simplificada',icon:'◉',run:()=>document.querySelector('#nc-focus').click()}
+ ];
+ const overlay=document.createElement('div');overlay.id='pd-command-palette';overlay.hidden=true;
+ overlay.innerHTML='<div class="pd-command-box" role="dialog" aria-modal="true" aria-label="Central de comandos"><div class="pd-command-search"><span>⌕</span><input id="pd-command-input" type="search" autocomplete="off" placeholder="Pesquisar aplicativos e comandos…" aria-label="Pesquisar aplicativos e comandos"></div><div id="pd-command-results" role="listbox"></div><div class="pd-command-foot"><span>↑ ↓ navegar · Enter abrir · Esc fechar</span><span>PROJECT DESKTOP</span></div></div>';
+ document.body.append(overlay);
+ const input=overlay.querySelector('#pd-command-input'),results=overlay.querySelector('#pd-command-results');
+ let shown=[],selected=0,lastFocus=null;
+ function draw(){
+  const q=input.value.trim().toLocaleLowerCase('pt-BR');
+  shown=entries.filter(x=>(x.label+' '+x.desc).toLocaleLowerCase('pt-BR').includes(q));
+  selected=Math.max(0,Math.min(selected,shown.length-1));
+  results.innerHTML=shown.length?shown.map((x,i)=>'<button type="button" role="option" aria-selected="'+(i===selected)+'" class="pd-command-result '+(i===selected?'selected':'')+'" data-command-index="'+i+'"><span class="pd-command-icon">'+escapeHtml(x.icon)+'</span><span><span class="pd-command-label">'+escapeHtml(x.label)+'</span><span class="pd-command-desc">'+escapeHtml(x.desc)+'</span></span></button>').join(''):'<div class="pd-command-empty">Nenhum comando encontrado.</div>';
+  const active=results.querySelector('.selected');if(active)active.scrollIntoView({block:'nearest'});
+ }
+ function close(){overlay.hidden=true;if(lastFocus&&lastFocus.isConnected)lastFocus.focus();lastFocus=null}
+ function run(){const item=shown[selected];if(!item)return;close();item.run()}
+ function open(){lastFocus=document.activeElement;input.value='';selected=0;draw();overlay.hidden=false;requestAnimationFrame(()=>input.focus())}
+ results.addEventListener('click',e=>{const b=e.target.closest('[data-command-index]');if(!b)return;selected=Number(b.dataset.commandIndex);run()});
+ input.addEventListener('input',()=>{selected=0;draw()});
+ input.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();selected=Math.min(shown.length-1,selected+1);draw()}else if(e.key==='ArrowUp'){e.preventDefault();selected=Math.max(0,selected-1);draw()}else if(e.key==='Enter'){e.preventDefault();run()}else if(e.key==='Escape'){e.preventDefault();close()}});
+ overlay.addEventListener('pointerdown',e=>{if(e.target===overlay)close()});
+ document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();if(overlay.hidden)open();else close();return}
+  if(e.key==='Escape'&&!overlay.hidden){e.preventDefault();close()}
+ });
+ document.addEventListener('click',e=>{const b=e.target.closest('#start-search');if(b){/* mantém a busca do menu iniciar independente */}});
+})();
 
 </script>
 </body>
