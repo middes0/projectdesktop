@@ -185,6 +185,38 @@ body{background:#071a31;color:#202b3b;font-family:"Segoe UI",SegoeUI,system-ui,-
  .landscape-card small{display:block;margin-top:14px;color:#a9bfd7;font-size:11px}
 }
 
+
+/* Landscape phone desktop layout */
+@media (max-height:520px) and (orientation:landscape){
+ #topbar{height:34px;padding:0 12px}
+ #topbar strong{font-size:12px;letter-spacing:1px}
+ #status{gap:10px;font-size:10px}
+ #desktop{left:8px;top:42px;bottom:54px;width:86px;display:flex;flex-direction:column;flex-wrap:wrap;align-content:flex-start;gap:4px;overflow:hidden}
+ .desk-icon{width:76px;min-height:57px;padding:4px 3px;gap:3px;border-radius:5px;font-size:10px}
+ .desk-icon .app-glyph{font-size:23px;line-height:25px}
+ #taskbar{height:46px;min-height:46px;padding:4px 10px;gap:5px;justify-content:center}
+ .taskbtn{width:36px;height:36px;min-width:36px}
+ .taskbtn svg{width:23px;height:23px}
+ #taskbar .tasksep{height:22px;margin:0 3px}
+ #taskbar .clock{position:absolute;right:12px;font-size:11px}
+ .window{max-width:calc(100vw - 112px);max-height:calc(100dvh - 92px);left:calc(50% + 40px);top:calc(50% - 1px)}
+ .window.maximized{left:86px!important;top:34px!important;width:calc(100vw - 86px)!important;height:calc(100dvh - 80px)!important;max-width:none;max-height:none}
+ .window-header{min-height:34px}
+ .window-content{overflow:auto}
+ .start-pins{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+ .start-pin{padding:6px 4px;font-size:11px;gap:5px}
+ .start-pin .launch-icon{width:27px;height:27px;flex-basis:27px}
+ .start-pin .launch-icon svg{width:25px;height:25px}
+ .start-footer{margin-top:10px;padding:8px 12px}
+}
+@media (max-height:380px) and (orientation:landscape){
+ #topbar .extra{display:none}
+ #desktop{bottom:48px}
+ .window{max-height:calc(100dvh - 80px)}
+ .start-search{margin-bottom:10px}
+ .start-pins{margin-bottom:10px}
+}
+
 </style>
 </head>
 <body>
