@@ -294,6 +294,24 @@ body{background:#071a31;color:#202b3b;font-family:"Segoe UI",SegoeUI,system-ui,-
 .pd-command-empty{padding:20px;text-align:center;color:#65768c;font-size:13px}
 .pd-command-foot{display:flex;justify-content:space-between;gap:8px;padding:9px 13px;background:#f0f5fb;border-top:1px solid #dbe5f0;color:#65768c;font-size:10px}
 @media(max-width:520px){#pd-command-palette{padding:7vh 8px 12px}.pd-command-box{max-height:84dvh}.pd-command-search{padding:12px}.pd-command-result{padding:9px}}
+
+/* Etapa 9 — barra de tarefas adaptável e foco acessível */
+#taskbar .taskbtn,#taskbar .tasksep,#taskbar .clock{flex-shrink:0}
+#taskbar .taskbtn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+#command-palette-toggle{color:var(--blue)}
+#command-palette-toggle:hover{background:#65e3ff18;border-color:#65e3ff55}
+@media(max-width:600px){
+ #taskbar{left:6px;right:6px;bottom:max(6px,env(safe-area-inset-bottom));transform:none;width:auto;max-width:none;justify-content:flex-start;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;gap:4px;padding:6px 7px;border-radius:15px}
+ #taskbar::-webkit-scrollbar{display:none}
+ #taskbar .taskbtn{flex:0 0 36px;width:36px}
+ #taskbar .tasksep{flex:0 0 1px}
+ #taskbar .clock{margin-left:auto;padding-left:5px;padding-right:5px}
+}
+@media(max-width:390px){
+ #taskbar .taskbtn{flex-basis:32px;width:32px;height:36px}
+ #taskbar{gap:3px}
+}
+
 </style>
 </head>
 <body>
