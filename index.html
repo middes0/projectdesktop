@@ -61,6 +61,64 @@ body{background:#07060d;letter-spacing:.1px}
 }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 
+/* Windows 11 inspired desktop refresh */
+:root{color-scheme:light;--bg:#08172b;--panel:rgba(246,249,255,.94);--line:rgba(80,105,145,.24);--purple:#2878d7;--blue:#60b8ff;--muted:#58677c}
+body{background:#071a31;color:#202b3b;font-family:"Segoe UI",SegoeUI,system-ui,-apple-system,sans-serif;letter-spacing:0;overflow:hidden}
+#wallpaper{background:radial-gradient(ellipse at 65% 42%,#3a9ce8 0%,#1b5d9c 19%,transparent 43%),radial-gradient(ellipse at 61% 45%,#6bd3f0 0%,transparent 23%),linear-gradient(130deg,#06152d 0%,#0c3261 48%,#07162f 100%)}
+#wallpaper:before{content:"";position:absolute;inset:auto 12% 13% auto;width:min(48vw,560px);height:min(48vw,560px);border-radius:50%;background:radial-gradient(circle at 35% 30%,#8eeaff55,transparent 40%);filter:blur(22px);pointer-events:none}
+#wallpaper:after{display:none}
+#topbar{height:0;padding:0;border:0;overflow:hidden;visibility:hidden}
+#desktop{inset:0 0 54px;padding:14px 10px;display:flex;flex-direction:column;flex-wrap:wrap;align-content:flex-start;align-items:flex-start;gap:4px;overflow:hidden}
+.desk-icon{flex:0 0 88px;width:88px;height:94px;min-height:94px;padding:7px 5px;gap:7px;border:1px solid transparent;border-radius:4px;background:transparent;box-shadow:none;transition:background .12s,border-color .12s}
+.desk-icon:hover,.desk-icon:focus-visible{background:#b8dfff30;border:1px solid #d9edff66;outline:none;transform:none}
+.app-glyph{width:42px;height:42px;border:0;border-radius:5px;background:transparent;box-shadow:none;color:#fff;font-size:29px;text-shadow:0 2px 4px #00152d88}
+.desk-icon span:last-child{font-size:12px;font-weight:400;color:#fff;text-shadow:0 1px 4px #00152dcc;text-align:center;max-width:82px}
+#taskbar{left:0;right:0;bottom:0;transform:none;width:100%;max-width:none;height:54px;justify-content:center;gap:5px;padding:5px 12px;border:0;border-top:1px solid #ffffff1c;border-radius:0;background:rgba(19,31,49,.82);box-shadow:0 -4px 22px #00112640;backdrop-filter:blur(28px)}
+.taskbtn{width:42px;height:42px;border:1px solid transparent;border-radius:5px;background:transparent;color:#f3f7ff;font-size:21px;transition:background .12s}
+.taskbtn:hover,.taskbtn.active{transform:none;background:#ffffff20;border-color:#ffffff14}
+.tasksep{height:28px;background:#ffffff24;margin:0 2px}
+#taskbar .clock{position:absolute;right:18px;top:0;height:100%;display:flex;align-items:center;padding:0 8px;color:#f5f7fc;font-size:12px}
+#taskbar .tasksep:last-of-type{display:none}
+.window{border:1px solid #c8d5e5;border-radius:8px;background:rgba(247,249,253,.97);color:#202b3b;box-shadow:0 18px 55px #00112655;backdrop-filter:blur(30px);animation:appear .13s ease-out}
+.titlebar{height:42px;padding:0 10px;background:#f5f7fb;border-bottom:1px solid #e1e7f0;cursor:move;color:#27364b}
+.window-title{font-size:13px;font-weight:500;gap:8px}
+.win-controls{gap:0;margin:-1px -10px -1px 0;align-self:stretch}
+.win-controls button{width:44px;height:100%;border:0;border-radius:0;background:transparent;color:#28364a;font-size:14px}
+.win-controls button:hover{background:#e1e8f2}
+.win-controls .close:hover{background:#c42b1c;color:#fff}
+.window-content{color:#202b3b;padding:20px}
+.muted,.note{color:#64748b}
+.hero{border:1px solid #dce5f0;border-radius:8px;background:linear-gradient(120deg,#e8f3ff,#f8fbff);box-shadow:none}
+.hero h2{color:#182a43}
+.eyebrow{color:#1769aa;letter-spacing:1.4px}
+.cards{gap:10px}
+.card{border:1px solid #dce4ee;border-radius:7px;background:#fff;box-shadow:0 1px 2px #0a23400a}
+.card:hover{border-color:#7cb7ec;background:#f5faff}
+.action{border:1px solid #c5d9ee;border-radius:5px;background:#eaf4ff;color:#183c62}
+.action:hover{background:#d9ebff}
+.field{background:#fff;color:#202b3b;border:1px solid #c5d0df;border-radius:5px}
+.field:focus{border-color:#2678c9}
+.list-item{background:#fff;border:1px solid #e1e7ef;border-radius:6px;color:#26374b}
+.calc-display{background:#f2f6fb;border-color:#d5deea;color:#182a43;border-radius:6px}
+.calc-key{background:#f4f7fb;border-color:#dce4ee;color:#202b3b;border-radius:5px}
+.calc-key:hover{background:#e3effb}
+.calc-key.operator{background:#e6f2ff;color:#145b9c;border-color:#c4ddf5}
+.calc-key.equals{background:#176fc1;color:#fff;border-color:#176fc1}
+.resize-handle{background:linear-gradient(135deg,transparent 45%,#7b91aa88 46%,#7b91aa88 53%,transparent 54%,transparent 65%,#7b91aa88 66%,#7b91aa88 73%,transparent 74%)}
+#toast{top:14px;background:#f7faff;color:#1f3045;border:1px solid #cdd9e8;box-shadow:0 8px 25px #00112625}
+@media(max-width:520px){
+ #desktop{inset:0 0 54px;padding:8px 4px;gap:2px}
+ .desk-icon{flex-basis:82px;width:82px;height:88px;min-height:88px}
+ .app-glyph{width:38px;height:38px;font-size:26px}
+ #taskbar{height:52px;justify-content:center;padding:4px 5px;gap:2px}
+ .taskbtn{width:34px;height:40px;font-size:18px}
+ #taskbar .clock{right:5px;font-size:10px;padding:0 3px}
+ .window{width:calc(100vw - 12px);height:min(540px,calc(100dvh - 66px));min-height:220px}
+ .window-content{padding:13px}
+ .win-controls button{width:34px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -71,10 +129,10 @@ body{background:#07060d;letter-spacing:.1px}
 <button class="desk-icon" data-app="notes"><span class="app-glyph">▧</span><span>Bloco de notas</span></button>
 <button class="desk-icon" data-app="terminal"><span class="app-glyph">⌘</span><span>Terminal</span></button>\n<button class="desk-icon" data-app="calculator"><span class="app-glyph">＋</span><span>Calculadora</span></button>
 <button class="desk-icon" data-app="settings"><span class="app-glyph">⚙</span><span>Configurações</span></button>
-<button class="desk-icon" data-app="about"><span class="app-glyph">◈</span><span>Sobre</span></button>
+<button class="desk-icon" data-app="about"><span class="app-glyph">ⓘ</span><span>Sobre</span></button>
 </main>
 <div id="windows"></div><div id="toast"></div>
-<nav id="taskbar" aria-label="Barra de tarefas"><button class="taskbtn" title="Menu iniciar" data-app="start">◈</button><span class="tasksep"></span><button class="taskbtn" title="Arquivos" data-app="files">▤</button><button class="taskbtn" title="Bloco de notas" data-app="notes">▧</button><button class="taskbtn" title="Terminal" data-app="terminal">⌘</button><button class="taskbtn" title="Calculadora" data-app="calculator">＋</button><button class="taskbtn" title="Configurações" data-app="settings">⚙</button><span class="tasksep"></span><span class="clock" id="taskclock">--:--</span></nav>
+<nav id="taskbar" aria-label="Barra de tarefas"><button class="taskbtn" title="Menu iniciar" data-app="start">⊞</button><span class="tasksep"></span><button class="taskbtn" title="Arquivos" data-app="files">▤</button><button class="taskbtn" title="Bloco de notas" data-app="notes">▧</button><button class="taskbtn" title="Terminal" data-app="terminal">⌘</button><button class="taskbtn" title="Calculadora" data-app="calculator">＋</button><button class="taskbtn" title="Configurações" data-app="settings">⚙</button><span class="tasksep"></span><span class="clock" id="taskclock">--:--</span></nav>
 <script>
 const $=s=>document.querySelector(s), windows=$('#windows');let z=10, winCount=0;
 const apps={
